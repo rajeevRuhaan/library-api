@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: Library Book Store API
+  description: This is library API used for study purpose. The user can see list of
+    book and can reserve. User also need to create account to reserve book. The admin
+    panner used for admin to perform CRUD operation
+  contact:
+    email: rajeev.sah@integrify.io
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/URRAJIVIN/library/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: user
+  description: Two types of users are admin and public
+- name: bookstore
+  description: Access to book store
+- name: reservation
+  description: store user id and book id with quantity and reservation and return
+    date
+paths:
+  /user:
+    post:
+      tags:
+      - user
+      summary: create user
+      description: |
+        create user account if not created
+      operationId: userPOST
+      parameters:
+      - name: Email
+        in: query
+        description: The user email for login
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: The password for login in clear text
+        required: true
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 8
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+                x-content-type: application/json
+        "400":
+          description: bad input parameter
+      x-swagger-router-controller: User
+  /reservation:
+    post:
+      tags:
+      - reservation
+      summary: create reservation
+      description: user reservation information created
+      operationId: reservationPOST
+      requestBody:
+        description: create reservation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      responses:
+        "200":
+          description: reservation information
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+                x-content-type: application/json
+      x-swagger-router-controller: Reservation
+  /bookstore:
+    post:
+      tags:
+      - bookstore
+      summary: create a book by admin
+      description: admin user can created book
+      operationId: bookstorePOST
+      requestBody:
+        description: create book
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookStore'
+        required: true
+      responses:
+        "200":
+          description: reservation information
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookStore'
+                x-content-type: application/json
+      x-swagger-router-controller: Bookstore
+components:
+  schemas:
+    User:
+      required:
+      - createdDate
+      - email
+      - password
+      - role
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        email:
+          type: string
+          example: user@email.com
+        password:
+          type: string
+          example: password
+        createdDate:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+      example:
+        password: password
+        createdDate: 2016-08-29T09:12:33.001Z
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
+        email: user@email.com
+    Reservation:
+      required:
+      - bookId
+      - quantity
+      - reservedDate
+      - returnDate
+      - userId
+      type: object
+      properties:
+        userId:
+          type: string
+        bookId:
+          type: string
+        quantity:
+          type: number
+        reservedDate:
+          type: string
+          format: date-time
+        returnedDate:
+          type: string
+          format: date-time
+      example:
+        reservedDate: 2000-01-23T04:56:07.000+00:00
+        quantity: 0.80082819046101150206595775671303272247314453125
+        userId: userId
+        bookId: bookId
+        returnedDate: 2000-01-23T04:56:07.000+00:00
+    BookStore:
+      required:
+      - ISBN13
+      - authors
+      - description
+      - imageUrl
+      - name
+      - published date
+      - publisher
+      properties:
+        name:
+          type: string
+        imageUrl:
+          type: string
+        ISBN13:
+          type: string
+        description:
+          type: string
+        authors:
+          type: string
+        publisher:
+          type: string
+        published date:
+          type: string
+      example:
+        imageUrl: imageUrl
+        name: name
+        description: description
+        publisher: publisher
+        ISBN13: ISBN13
+        published date: published date
+        authors: authors
